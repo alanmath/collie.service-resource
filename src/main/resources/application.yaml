@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: collie-service
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/collie}
+    username: ${DATABASE_USERNAME:collie}
+    password: ${DATABASE_PASSWORD:collie}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    baseline-on-migrate: true
+    schemas: microservices
+  jpa:
+    properties:
+      hibernate:
+        default_schema: microservices
+
+management:
+  endpoints:
+    web:
+      base-path: /accounts/actuator
+      exposure:
+        include: [ 'prometheus' ]
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
