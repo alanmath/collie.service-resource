@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor @NoArgsConstructor
 public class Microservice {
 
-    private String id;
-    private String name;
-    private String squadResponsavel;
+    String id;
+    String name;
+    String squadResponsavel;
 }
