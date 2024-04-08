@@ -1,5 +1,7 @@
 package insper.collie.service;
 
+import insper.collie.squad.SquadAllInfo;
+
 public class MicroserviceParser {
     
         public static MicroserviceModel to(MicroserviceIn in) {
@@ -15,6 +17,15 @@ public class MicroserviceParser {
                 .id(account.id())
                 .name(account.name())
                 .squadResponsavel(account.squadResponsavel())
+                .build();
+        }
+
+        public static MicroserviceAll toAll(Microservice account, SquadAllInfo squad) {
+            return MicroserviceAll.builder()
+                .id(account.id())
+                .name(account.name())
+                .squadResponsavel(account.squadResponsavel())
+                .squadNome(squad.name())
                 .build();
         }
 }

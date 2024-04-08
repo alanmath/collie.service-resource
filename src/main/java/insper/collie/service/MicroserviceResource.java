@@ -32,18 +32,9 @@ public class MicroserviceResource implements MicroserviceController {
             @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos")
         })
     public ResponseEntity<MicroserviceOut> create(MicroserviceIn microserviceRegisterIn) {
-        final MicroserviceModel microservice = microserviceService.createMicroservice(MicroserviceModel.builder()
-            .name(microserviceRegisterIn.name())
-            .squadResponsavel(microserviceRegisterIn.squadResponsavel())
-            .build()
-        );
+        final MicroserviceModel microservice = microserviceService.createMicroservice(MicroserviceParser.to(microserviceRegisterIn));
         logger.info("Microservice created: {}", microservice);
-        return ResponseEntity.ok(MicroserviceOut.builder()
-            .id(microservice.id())
-            .name(microservice.name())
-            .squadResponsavel(microservice.squadResponsavel())
-            .build()
-        );
+        return ResponseEntity.ok(MicroserviceParser.to(microservice));
     }
     
     
@@ -53,18 +44,11 @@ public class MicroserviceResource implements MicroserviceController {
             @ApiResponse(responseCode = "200", description = "Microserviço encontrado", content = @Content(schema = @Schema(implementation = MicroserviceOut.class))),
             @ApiResponse(responseCode = "404", description = "Microserviço não encontrado")
         })
-    public ResponseEntity<MicroserviceOut> readById(String id) {
-        Microservice microservice = microserviceService.getMicroservice(id);
+    public ResponseEntity<MicroserviceAll> readById(String id) {
+        MicroserviceAll microservice = microserviceService.getMicroservice(id);
         logger.info("Microservice found: {}", microservice);
-        if (microservice == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(MicroserviceOut.builder()
-            .id(microservice.id())
-            .name(microservice.name())
-            .squadResponsavel(microservice.squadResponsavel())
-            .build()
-        );
+
+        return ResponseEntity.ok(microservice);
     }
 
     @Override
@@ -75,21 +59,10 @@ public class MicroserviceResource implements MicroserviceController {
             @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos")
         })
     public ResponseEntity<MicroserviceOut> update(String id, MicroserviceIn microserviceRegisterIn) {
-        Microservice microservice = microserviceService.updateMicroservice(id, MicroserviceModel.builder()
-            .name(microserviceRegisterIn.name())
-            .squadResponsavel(microserviceRegisterIn.squadResponsavel())
-            .build()
-        );
-        if (microservice == null) {
-            return ResponseEntity.notFound().build();
-        }
+        MicroserviceModel microservice = microserviceService.updateMicroservice(id, MicroserviceParser.to(microserviceRegisterIn));
+
         logger.info("Microservice updated: {}", microservice);
-        return ResponseEntity.ok(MicroserviceOut.builder()
-            .id(microservice.id())
-            .name(microservice.name())
-            .squadResponsavel(microservice.squadResponsavel())
-            .build()
-        );
+        return ResponseEntity.ok(MicroserviceParser.to(microservice));
     }
 
     @Override
@@ -118,12 +91,7 @@ public class MicroserviceResource implements MicroserviceController {
         final List<MicroserviceModel> microservices = microserviceService.listAllMicroservices();
         logger.info("Microservices found: {}", microservices);
         return ResponseEntity.ok(microservices.stream()
-            .map(microservice -> MicroserviceOut.builder()
-                .id(microservice.id())
-                .name(microservice.name())
-                .squadResponsavel(microservice.squadResponsavel())
-                .build()
-            )
+            .map(microservice -> MicroserviceParser.to(microservice))
             .collect(Collectors.toList())
         );    
     }
