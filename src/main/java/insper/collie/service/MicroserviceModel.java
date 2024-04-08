@@ -29,6 +29,9 @@ public class MicroserviceModel {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "link_repositorio")
+    private String linkRepositorio;
+
     @Column(name = "squad_responsavel")
     private String squadResponsavel;
 

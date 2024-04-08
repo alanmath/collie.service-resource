@@ -14,5 +14,6 @@ public class Microservice {
 
     String id;
     String name;
+    String linkRepositorio;
     String squadResponsavel;
 }

@@ -72,6 +72,9 @@ public class MicroserviceService {
 
         if (in.name() != null)  microservice.name(in.name());
 
+        if (in.linkRepositorio() != null)  microservice.linkRepositorio(in.linkRepositorio());
+
+
         if(in.squadResponsavel() != null){
             ResponseEntity<Boolean> responseSquad = squadController.isSquad(in.squadResponsavel());
             if (responseSquad != null){
