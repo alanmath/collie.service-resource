@@ -1,9 +1,12 @@
 package insper.collie.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import insper.collie.service.exceptions.MicroserviceNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -18,9 +21,12 @@ public class MicroserviceService {
     }
     @Transactional
     public Microservice getMicroservice(String id) {
-        return microserviceRepository.findById(id).map(MicroserviceModel::to).orElse(null);
-
-    }
+            Optional<MicroserviceModel> microservice = microserviceRepository.findById(id);
+            if (microservice.isPresent()){
+                return microservice.get().to();
+            }
+            throw new MicroserviceNotFoundException(id);
+        }
     @Transactional
     public List<MicroserviceModel> listAllMicroservices() {
         return microserviceRepository.findAll();
@@ -29,9 +35,7 @@ public class MicroserviceService {
     @Transactional
     public Microservice updateMicroservice(String id, MicroserviceModel in) {
         MicroserviceModel m = microserviceRepository.findById(id).orElse(null);
-        if (m == null){
-            return null;
-        }
+        if (m == null) throw new MicroserviceNotFoundException(id);
 
         MicroserviceModel microservice = m;
 
@@ -47,6 +51,7 @@ public class MicroserviceService {
 
     @Transactional
     public void deleteMicroservice(String id) {
-        microserviceRepository.deleteById(id);
+        if (microserviceRepository.existsById(id)) microserviceRepository.deleteById(id);
+        throw new MicroserviceNotFoundException(id);
     }
 }
