@@ -29,7 +29,7 @@ public class MicroserviceModel {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "squadResponsavel")
+    @Column(name = "squad_responsavel")
     private String squadResponsavel;
 
     public MicroserviceModel(Microservice o) {

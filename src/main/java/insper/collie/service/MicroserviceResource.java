@@ -26,7 +26,6 @@ public class MicroserviceResource implements MicroserviceController {
     private MicroserviceService microserviceService;
 
     @Override
-    @PostMapping("/microservices")
     @Operation(summary = "Cria um novo Microserviço", description = "Cria um novo Microserviço e retorna o objeto criado com seu ID.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Microserviço criado com sucesso", content = @Content(schema = @Schema(implementation = MicroserviceOut.class))),
@@ -49,15 +48,17 @@ public class MicroserviceResource implements MicroserviceController {
     
     
     @Override
-    @GetMapping("/microservices/{id}")
     @Operation(summary = "Lê um Microserviço pelo ID", description = "Obtém as informações de um Microserviço específico pelo seu ID.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Microserviço encontrado", content = @Content(schema = @Schema(implementation = MicroserviceOut.class))),
             @ApiResponse(responseCode = "404", description = "Microserviço não encontrado")
         })
     public ResponseEntity<MicroserviceOut> readById(String id) {
-        final MicroserviceModel microservice = microserviceService.getMicroservice(id);
+        Microservice microservice = microserviceService.getMicroservice(id);
         logger.info("Microservice found: {}", microservice);
+        if (microservice == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(MicroserviceOut.builder()
             .id(microservice.id())
             .name(microservice.name())
@@ -67,7 +68,6 @@ public class MicroserviceResource implements MicroserviceController {
     }
 
     @Override
-    @PutMapping("/microservices/{id}")
     @Operation(summary = "Atualiza um Microserviço", description = "Atualiza as informações de um Microserviço específico.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Microserviço atualizado com sucesso", content = @Content(schema = @Schema(implementation = MicroserviceOut.class))),
@@ -75,11 +75,14 @@ public class MicroserviceResource implements MicroserviceController {
             @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos")
         })
     public ResponseEntity<MicroserviceOut> update(String id, MicroserviceIn microserviceRegisterIn) {
-        final MicroserviceModel microservice = microserviceService.updateMicroservice(id, MicroserviceModel.builder()
+        Microservice microservice = microserviceService.updateMicroservice(id, MicroserviceModel.builder()
             .name(microserviceRegisterIn.name())
             .squadResponsavel(microserviceRegisterIn.squadResponsavel())
             .build()
         );
+        if (microservice == null) {
+            return ResponseEntity.notFound().build();
+        }
         logger.info("Microservice updated: {}", microservice);
         return ResponseEntity.ok(MicroserviceOut.builder()
             .id(microservice.id())
@@ -90,7 +93,6 @@ public class MicroserviceResource implements MicroserviceController {
     }
 
     @Override
-    @DeleteMapping("/microservices/{id}")
     @Operation(summary = "Deleta um Microserviço", description = "Deleta um Microserviço específico pelo seu ID.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Microserviço deletado com sucesso"),
@@ -107,7 +109,6 @@ public class MicroserviceResource implements MicroserviceController {
     }
 
     @Override
-    @GetMapping("/microservices")
     @Operation(summary = "Lista todos os Microserviços", description = "Lista todas as instâncias de Microserviços.",
         responses = {
             @ApiResponse(responseCode = "200", description = "Lista de Microserviços encontrada", content = @Content(schema = @Schema(implementation = MicroserviceOut[].class))),

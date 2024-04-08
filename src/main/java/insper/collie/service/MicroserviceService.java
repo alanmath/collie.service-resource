@@ -17,9 +17,9 @@ public class MicroserviceService {
         return microserviceRepository.save(microservice);
     }
     @Transactional
-    public MicroserviceModel getMicroservice(String id) {
-        // convert string id to ID
-        return microserviceRepository.findById(id);
+    public Microservice getMicroservice(String id) {
+        return microserviceRepository.findById(id).map(MicroserviceModel::to).orElse(null);
+
     }
     @Transactional
     public List<MicroserviceModel> listAllMicroservices() {
@@ -27,11 +27,22 @@ public class MicroserviceService {
     }
 
     @Transactional
-    public MicroserviceModel updateMicroservice(String id, MicroserviceModel microservice) {
-        MicroserviceModel existingMicroservice = microserviceRepository.findById(id);
-        existingMicroservice.name(microservice.name());
-        existingMicroservice.squadResponsavel(microservice.squadResponsavel());
-        return microserviceRepository.save(existingMicroservice);
+    public Microservice updateMicroservice(String id, MicroserviceModel in) {
+        MicroserviceModel m = microserviceRepository.findById(id).orElse(null);
+        if (m == null){
+            return null;
+        }
+
+        MicroserviceModel microservice = m;
+
+        if (in.name() != null) {
+            microservice.name(in.name());
+        }
+        if(in.squadResponsavel() != null){
+            microservice.squadResponsavel(in.squadResponsavel());
+        }
+
+        return microserviceRepository.save(microservice).to();
     }
 
     @Transactional

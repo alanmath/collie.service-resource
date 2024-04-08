@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MicroserviceRepository extends JpaRepository<MicroserviceModel, Long> {
+public interface MicroserviceRepository extends JpaRepository<MicroserviceModel, String> {
 
-    //find by id
-    MicroserviceModel findById(String id);
+
 
     List<MicroserviceModel> findBySquadResponsavel(String squadResponsavel);
 
