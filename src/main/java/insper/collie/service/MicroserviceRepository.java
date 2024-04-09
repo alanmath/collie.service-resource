@@ -8,9 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MicroserviceRepository extends JpaRepository<MicroserviceModel, String> {
 
-
-
-    List<MicroserviceModel> findBySquadResponsavel(String squadResponsavel);
-
     void deleteById(String id);
 }

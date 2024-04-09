@@ -30,12 +30,12 @@ public class MicroserviceService {
     @Transactional
     public MicroserviceModel createMicroservice(MicroserviceModel microservice) {
 
-        ResponseEntity<Boolean> responseSquad = squadController.isSquad(microservice.squadResponsavel());
+        ResponseEntity<Boolean> responseSquad = squadController.isSquad(microservice.squad_id());
 
         // verifica se o squad de fato existe
         if (responseSquad != null){
             if (!responseSquad.getBody()){
-                throw new SquadNotFoundException(microservice.squadResponsavel());
+                throw new SquadNotFoundException(microservice.squad_id());
             }
         }else throw new RequestErrorException("Squad");
         
@@ -50,8 +50,8 @@ public class MicroserviceService {
             }
             
             Microservice microservice = m.get().to();
-            ResponseEntity<SquadAllInfo> response = squadController.getSquad(microservice.squadResponsavel());
-            if (response == null) throw new SquadNotFoundException(microservice.squadResponsavel());
+            ResponseEntity<SquadAllInfo> response = squadController.getSquad(microservice.squad_id());
+            if (response == null) throw new SquadNotFoundException(microservice.squad_id());
     
             SquadAllInfo squad = response.getBody();
 
@@ -72,17 +72,17 @@ public class MicroserviceService {
 
         if (in.name() != null)  microservice.name(in.name());
 
-        if (in.linkRepositorio() != null)  microservice.linkRepositorio(in.linkRepositorio());
+        if (in.linkRepository() != null)  microservice.linkRepository(in.linkRepository());
 
 
-        if(in.squadResponsavel() != null){
-            ResponseEntity<Boolean> responseSquad = squadController.isSquad(in.squadResponsavel());
+        if(in.squad_id() != null){
+            ResponseEntity<Boolean> responseSquad = squadController.isSquad(in.squad_id());
             if (responseSquad != null){
                 if (!responseSquad.getBody()){
-                    throw new SquadNotFoundException(in.squadResponsavel());
+                    throw new SquadNotFoundException(in.squad_id());
                 }
             }else throw new RequestErrorException("Squad");
-            microservice.squadResponsavel(in.squadResponsavel());
+            microservice.squad_id(in.squad_id());
         }
 
         return microserviceRepository.save(microservice);

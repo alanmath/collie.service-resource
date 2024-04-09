@@ -7,8 +7,8 @@ public class MicroserviceParser {
         public static MicroserviceModel to(MicroserviceIn in) {
             return MicroserviceModel.builder()
                 .name(in.name())
-                .linkRepositorio(in.linkRepositorio())
-                .squadResponsavel(in.squadResponsavel())
+                .linkRepository(in.linkRepository())
+                .squad_id(in.squad_id())
                 .build();
 
         }
@@ -17,8 +17,8 @@ public class MicroserviceParser {
             return MicroserviceOut.builder()
                 .id(account.id())
                 .name(account.name())
-                .linkRepositorio(account.linkRepositorio())
-                .squadResponsavel(account.squadResponsavel())
+                .linkRepository(account.linkRepository())
+                .squad_id(account.squad_id())
                 .build();
         }
 
@@ -26,9 +26,9 @@ public class MicroserviceParser {
             return MicroserviceAll.builder()
                 .id(account.id())
                 .name(account.name())
-                .linkRepositorio(account.linkRepositorio())
-                .squadResponsavel(account.squadResponsavel())
-                .squadNome(squad.name())
+                .linkRepository(account.linkRepository())
+                .squad_id(account.squad_id())
+                .squadName(squad.name())
                 .build();
         }
 }

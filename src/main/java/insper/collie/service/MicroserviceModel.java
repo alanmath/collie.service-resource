@@ -29,23 +29,25 @@ public class MicroserviceModel {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "link_repositorio")
-    private String linkRepositorio;
+    @Column(name = "link_repository")
+    private String linkRepository;
 
-    @Column(name = "squad_responsavel")
-    private String squadResponsavel;
+    @Column(name = "squad_id")
+    private String squad_id;
 
     public MicroserviceModel(Microservice o) {
         this.id = o.id();
         this.name = o.name();
-        this.squadResponsavel = o.squadResponsavel();
+        this.linkRepository = o.linkRepository();
+        this.squad_id = o.squad_id();
     }
 
     public Microservice to() {
         return Microservice.builder()
             .id(id)
             .name(name)
-            .squadResponsavel(squadResponsavel)
+            .linkRepository(linkRepository)
+            .squad_id(squad_id)
             .build();
     }
 
