@@ -95,4 +95,19 @@ public class MicroserviceResource implements MicroserviceController {
             .collect(Collectors.toList())
         );    
     }
+
+    @Override
+    @Operation(summary = "Trivy Report" , description = "Adiciona um relatório Trivy a um Microserviço específico.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Relatório Trivy adicionado com sucesso", content = @Content(schema = @Schema(implementation = MicroserviceOut.class))),
+            @ApiResponse(responseCode = "404", description = "Microserviço não encontrado"),
+            @ApiResponse(responseCode = "400", description = "Dados de entrada inválidos")
+        })
+    public void trivy(String id, TrivyReportIn trivyReportIn) {
+        logger.info("passou aqui");
+        microserviceService.trivyReport(id, (trivyReportIn));
+        // logger.info("Trivy report added to microservice: {}", microservice);
+        logger.info("id: {}, report", id);    
+    
+        }
 }

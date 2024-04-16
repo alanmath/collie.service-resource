@@ -3,10 +3,12 @@ package insper.collie.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import ch.qos.logback.classic.Logger;
 import insper.collie.service.exceptions.MicroserviceNotFoundException;
 import insper.collie.squad.SquadAllInfo;
 import insper.collie.squad.SquadController;
@@ -19,6 +21,9 @@ import insper.collie.squad.exceptions.SquadNotFoundException;
 
 @Service
 public class MicroserviceService {
+
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(TrivyReportIn.class);
+
 
     @Autowired
     private MicroserviceRepository microserviceRepository;
@@ -92,5 +97,16 @@ public class MicroserviceService {
     public void deleteMicroservice(String id) {
         if (microserviceRepository.existsById(id)) microserviceRepository.deleteById(id);
         throw new MicroserviceNotFoundException(id);
+    }
+
+    public void trivyReport(String id, TrivyReportIn in){
+        // log the data that is in the trivyReport
+        System.out.println(in);
+
+        logger.info("Trivy Report added to microservice: {}", id);
+
+        logger.info("Passou aqui, in: {}", in);
+
+
     }
 }
