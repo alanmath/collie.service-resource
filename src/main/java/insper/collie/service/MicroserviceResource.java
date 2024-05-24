@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ch.qos.logback.classic.Logger;
+import insper.collie.squad.SquadAllInfo;
+import insper.collie.squad.SquadController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +26,9 @@ public class MicroserviceResource implements MicroserviceController {
 
     @Autowired
     private MicroserviceService microserviceService;
+
+    @Autowired
+    private SquadController squadController;
 
     @Override
     @Operation(summary = "Cria um novo Microserviço", description = "Cria um novo Microserviço e retorna o objeto criado com seu ID.",
@@ -110,4 +115,25 @@ public class MicroserviceResource implements MicroserviceController {
         logger.info("id: {}, report", id);    
     
         }
+
+    // get microservices by squad
+    @Override
+    @Operation(summary = "Lista todos os Microserviços de um Squad", description = "Lista todas as instâncias de Microserviços de um Squad específico.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Lista de Microserviços encontrada", content = @Content(schema = @Schema(implementation = MicroserviceOut[].class))),
+            @ApiResponse(responseCode = "404", description = "Nenhum Microserviço encontrado")
+        })
+    public ResponseEntity<List<MicroserviceAll>> readBySquad(String squadId) {
+        final List<MicroserviceModel> microservices = microserviceService.listMicroservicesBySquad(squadId);
+        
+        SquadAllInfo squad = squadController.getSquad(squadId).getBody();
+        logger.info("Microservices found: {}", microservices);
+        return ResponseEntity.ok(microservices.stream()
+            .map(microservice -> MicroserviceParser.toAll(microservice, squad))
+            .collect(Collectors.toList())
+        );
+           
+    }
+
+    
 }

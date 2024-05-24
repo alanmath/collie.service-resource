@@ -1,5 +1,6 @@
 package insper.collie.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class MicroserviceService {
                 throw new MicroserviceNotFoundException(id);
             }
             
-            Microservice microservice = m.get().to();
+            MicroserviceModel microservice = m.get();
             ResponseEntity<SquadAllInfo> response = squadController.getSquad(microservice.squad_id());
             if (response == null) throw new SquadNotFoundException(microservice.squad_id());
     
@@ -107,6 +108,17 @@ public class MicroserviceService {
 
         logger.info("Passou aqui, in: {}", in);
 
+
+    }
+    public List<MicroserviceModel> listMicroservicesBySquad(String squadId) {
+        List<MicroserviceModel> microservices = new ArrayList<MicroserviceModel>();
+        for (MicroserviceModel m : microserviceRepository.findAll()){
+            if (m.squad_id().equals(squadId)){
+                microservices.add(m);
+            }
+        };
+        return microservices;
+            
 
     }
 }

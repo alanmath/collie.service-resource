@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface MicroserviceRepository extends JpaRepository<MicroserviceModel, String> {
 
     void deleteById(String id);
+
+    // List<MicroserviceModel> findBySquad_id(String squadId);
 }

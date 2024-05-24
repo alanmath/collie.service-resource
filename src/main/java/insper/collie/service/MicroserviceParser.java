@@ -22,7 +22,7 @@ public class MicroserviceParser {
                 .build();
         }
 
-        public static MicroserviceAll toAll(Microservice account, SquadAllInfo squad) {
+        public static MicroserviceAll toAll(MicroserviceModel account, SquadAllInfo squad) {
             return MicroserviceAll.builder()
                 .id(account.id())
                 .name(account.name())
