@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,6 @@ import ch.qos.logback.classic.Logger;
 import insper.collie.service.exceptions.MicroserviceNotFoundException;
 import insper.collie.squad.SquadAllInfo;
 import insper.collie.squad.SquadController;
-import insper.collie.squad.SquadInfo;
 import jakarta.transaction.Transactional;
 
 import insper.collie.squad.exceptions.RequestErrorException;
@@ -33,6 +34,7 @@ public class MicroserviceService {
     @Autowired
     private SquadController squadController;
     
+    @CachePut(value="microservices", key = "#result.id()")
     @Transactional
     public MicroserviceModel createMicroservice(MicroserviceModel microservice) {
 
@@ -48,6 +50,7 @@ public class MicroserviceService {
 
         return microserviceRepository.save(microservice);
     }
+
     @Transactional
     public MicroserviceAll getMicroservice(String id) {
             Optional<MicroserviceModel> m = microserviceRepository.findById(id);
@@ -64,11 +67,13 @@ public class MicroserviceService {
             return  MicroserviceParser.toAll(microservice, squad);
 
         }
+
     @Transactional
     public List<MicroserviceModel> listAllMicroservices() {
         return microserviceRepository.findAll();
     }
 
+    @CachePut(value="microservices", key = "#id", unless = "#result == null")
     @Transactional
     public MicroserviceModel updateMicroservice(String id, MicroserviceModel in) {
         MicroserviceModel m = microserviceRepository.findById(id).orElse(null);
@@ -94,6 +99,7 @@ public class MicroserviceService {
         return microserviceRepository.save(microservice);
     }
 
+    @CachePut(value="microservices", key="#id", condition="#result != null")
     @Transactional
     public void deleteMicroservice(String id) {
         if (microserviceRepository.existsById(id)) microserviceRepository.deleteById(id);
@@ -110,6 +116,8 @@ public class MicroserviceService {
 
 
     }
+
+    @Cacheable(value="microservicesSqaud", key="#squadId")
     public List<MicroserviceModel> listMicroservicesBySquad(String squadId) {
         List<MicroserviceModel> microservices = new ArrayList<MicroserviceModel>();
         for (MicroserviceModel m : microserviceRepository.findAll()){

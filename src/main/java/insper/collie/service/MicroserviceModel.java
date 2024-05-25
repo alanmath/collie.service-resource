@@ -1,5 +1,7 @@
 package insper.collie.service;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,7 +21,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(of = "id")
 @Builder @Getter @Setter @Accessors(chain = true, fluent = true)
 @NoArgsConstructor @AllArgsConstructor
-public class MicroserviceModel {
+public class MicroserviceModel implements Serializable{
 
     @Id
     @Column(name = "id_microservice")
